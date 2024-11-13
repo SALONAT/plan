@@ -15,7 +15,7 @@
 
 ## 3. Customers
 
-- **Columns**: `id`, `name`, `email`, `password`, `created_at`, `updated_at`
+- **Columns**: `id`, `name`, `email`, `password`, `phone`, `notification_token` ,`created_at`, `updated_at`
 - **Relationships**:
   - One-to-Many with **Appointments** (each customer can book multiple appointments)
   - One-to-Many with **Reviews** (each customer can leave multiple reviews)
