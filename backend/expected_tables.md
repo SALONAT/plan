@@ -8,14 +8,14 @@
 
 ## 2. Salon Owners
 
-- **Columns**: `id`, `name`, `email`, `password`, `phone`, `status`, `last_login`, `login_attempts`, `created_at`, `updated_at`
+- **Columns**: `id`, `name`, `email`, `password`, `created_at`, `updated_at`
 - **Relationships**:
   - One-to-Many with **Salons** (ownership)
   - One-to-Many with **Notifications** (salon-specific notifications)
 
 ## 3. Customers
 
-- **Columns**: `id`, `name`, `email`, `password`, `phone`, `notification_token`, `profile_picture_url`, `status`, `created_at`, `updated_at`
+- **Columns**: `id`, `name`, `email`, `password`, `created_at`, `updated_at`
 - **Relationships**:
   - One-to-Many with **Appointments** (booking multiple appointments)
   - One-to-Many with **Reviews** (writing reviews)
