@@ -8,7 +8,7 @@
 
 ## 2. Salon Owners
 
-- **Columns**: `id`, `name`, `email`, `password`, `created_at`, `updated_at`
+- **Columns**: `id`, `name`, `email`, `password`, `phone` ,`created_at`, `updated_at`
 - **Relationships**:
   - One-to-Many with **Salons** (each salon owner can own multiple salons)
   - One-to-Many with **Notifications** (each salon owner receives notifications about their salons, bookings)
