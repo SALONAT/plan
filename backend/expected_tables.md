@@ -1,118 +1,135 @@
-# Database Tables and Relationships
+# Enhanced Database Tables and Relationships for "Saloonat"
 
 ## 1. Admins
 
-- **Columns**: `id`, `name`, `email`, `password`, `created_at`, `updated_at`
+- **Columns**: `id`, `name`, `email`, `password`, `last_login`, `role`, `created_at`, `updated_at`
 - **Relationships**:
-  - One-to-Many with **Notifications** (each admin can receive notifications for system alerts)
+  - One-to-Many with **Notifications** (to receive system alerts)
 
 ## 2. Salon Owners
 
-- **Columns**: `id`, `name`, `email`, `password`, `created_at`, `updated_at`
+- **Columns**: `id`, `name`, `email`, `password`, `phone`, `status`, `last_login`, `login_attempts`, `created_at`, `updated_at`
 - **Relationships**:
-  - One-to-Many with **Salons** (each salon owner can own multiple salons)
-  - One-to-Many with **Notifications** (each salon owner receives notifications about their salons, bookings)
+  - One-to-Many with **Salons** (ownership)
+  - One-to-Many with **Notifications** (salon-specific notifications)
 
 ## 3. Customers
 
-- **Columns**: `id`, `name`, `email`, `password`, `created_at`, `updated_at`
+- **Columns**: `id`, `name`, `email`, `password`, `phone`, `notification_token`, `profile_picture_url`, `status`, `created_at`, `updated_at`
 - **Relationships**:
-  - One-to-Many with **Appointments** (each customer can book multiple appointments)
-  - One-to-Many with **Reviews** (each customer can leave multiple reviews)
-  - One-to-Many with **Notifications** (each customer receives notifications about their bookings)
+  - One-to-Many with **Appointments** (booking multiple appointments)
+  - One-to-Many with **Reviews** (writing reviews)
+  - One-to-Many with **Notifications** (appointment and review notifications)
 
 ---
 
 ## 4. Salons
 
-- **Columns**: `id`, `owner_id` (foreign key to Salon Owners), `name`, `location`, `contact`, `description`, `hours`, `created_at`, `updated_at`
+- **Columns**: `id`, `owner_id`, `name`, `street_address`, `city`, `state`, `postal_code`, `country`, `latitude`, `longitude`, `contact`, `description`, `rating`, `hours`, `status`, `created_at`, `updated_at`
 - **Relationships**:
-  - Many-to-One with **Salon Owners** (each salon is owned by a salon owner)
-  - One-to-Many with **Services** (each salon can offer multiple services)
-  - One-to-Many with **Appointments** (appointments are booked for the salon)
-  - One-to-Many with **Reviews** (customers leave reviews for salons)
+  - Many-to-One with **Salon Owners** (ownership)
+  - One-to-Many with **Services** (offering services)
+  - One-to-Many with **Appointments** (hosting appointments)
+  - One-to-Many with **Reviews** (receiving customer feedback)
 
 ## 5. Services
 
-- **Columns**: `id`, `salon_id` (foreign key to Salons), `name`, `description`, `duration`, `price`, `category`, `created_at`, `updated_at`
+- **Columns**: `id`, `salon_id`, `name`, `description`, `duration`, `price`, `category`, `status`, `created_at`, `updated_at`
 - **Relationships**:
-  - Many-to-One with **Salons** (each service is offered by a specific salon)
-  - One-to-Many with **Appointments** (each appointment is for a specific service)
+  - Many-to-One with **Salons** (offered by salons)
+  - One-to-Many with **Appointments** (selected for appointments)
 
-## 6. Appointments
+## 6. Availability
 
-- **Columns**: `id`, `customer_id` (foreign key to Customers), `salon_id` (foreign key to Salons), `service_id` (foreign key to Services), `date`, `time`, `status` (pending, confirmed, canceled), `created_at`, `updated_at`
+- **Columns**: `id`, `salon_id`, `day_of_week`, `start_time`, `end_time`, `is_recurring`, `created_at`, `updated_at`
 - **Relationships**:
-  - Many-to-One with **Customers** (each appointment is booked by a customer)
-  - Many-to-One with **Salons** (each appointment is for a specific salon)
-  - Many-to-One with **Services** (each appointment is for a specific service)
-  - One-to-One with **Transactions** (each appointment can have one associated transaction)
+  - Many-to-One with **Salons** (each availability slot is linked to one salon)
 
-## 7. Transactions
+## 7. Appointments
 
-- **Columns**: `id`, `appointment_id` (foreign key to Appointments), `amount`, `status` (completed, pending, refunded), `transaction_date`, `created_at`, `updated_at`
+- **Columns**: `id`, `customer_id`, `salon_id`, `service_id`, `date`, `time`, `status`, `checked_in`, `created_at`, `updated_at`
 - **Relationships**:
-  - One-to-One with **Appointments** (each transaction is associated with one appointment)
+  - Many-to-One with **Customers** (booked by customers)
+  - Many-to-One with **Salons** (held at salons)
+  - Many-to-One with **Services** (service being provided)
+  - One-to-One with **Transactions** (financial transactions)
 
-## 8. Notifications
+## 8. Transactions
 
-- **Columns**: `id`, `user_id` (foreign key to either Admins, Salon Owners, or Customers), `user_type` (to distinguish role type), `content`, `type` (e.g., booking confirmation, reminder), `status` (read, unread), `created_at`, `updated_at`
+- **Columns**: `id`, `appointment_id`, `amount`, `payment_method`, `status`, `transaction_date`, `gateway_response`, `created_at`, `updated_at`
 - **Relationships**:
-  - Many-to-One with **Admins**, **Salon Owners**, or **Customers** (each notification is associated with a specific user)
+  - One-to-One with **Appointments** (related to specific appointments)
 
-## 9. Reviews
+## 9. Notifications
 
-- **Columns**: `id`, `customer_id` (foreign key to Customers), `salon_id` (foreign key to Salons), `rating`, `comment`, `created_at`, `updated_at`
+- **Columns**: `id`, `user_id`, `user_type`, `content`, `type`, `status`, `delivered_at`, `failed_at`, `created_at`, `updated_at`
 - **Relationships**:
-  - Many-to-One with **Customers** (each review is left by a customer)
-  - Many-to-One with **Salons** (each review is for a specific salon)
+  - Many-to-One with **Admins**, **Salon Owners**, or **Customers** (targeted notifications)
+
+## 10. Reviews
+
+- **Columns**: `id`, `customer_id`, `salon_id`, `rating`, `comment`, `created_at`, `updated_at`
+- **Relationships**:
+  - Many-to-One with **Customers** (authored by customers)
+  - Many-to-One with **Salons** (related to specific salons)
+
+## 11. User Activity Logs (Optional)
+
+- **Columns**: `id`, `user_id`, `activity_type`, `description`, `ip_address`, `session_id`, `created_at`
+- **Relationships**:
+  - Many-to-One with **Admins**, **Salon Owners**, or **Customers** (logs activity for security and audit purposes)
 
 ---
 
 # Relationships Summary
 
-- **Admins**
+- **Admins**:
 
   - Has Many → **Notifications**
 
-- **Salon Owners**
+- **Salon Owners**:
 
   - Has Many → **Salons**
   - Has Many → **Notifications**
 
-- **Customers**
+- **Customers**:
 
   - Has Many → **Appointments**
   - Has Many → **Reviews**
   - Has Many → **Notifications**
 
-- **Salons**
+- **Salons**:
 
   - Belongs To → **Salon Owners**
   - Has Many → **Services**
   - Has Many → **Appointments**
   - Has Many → **Reviews**
+  - Has Many → **Availability** (managing all time slots for services)
 
-- **Services**
+- **Services**:
 
   - Belongs To → **Salons**
   - Has Many → **Appointments**
 
-- **Appointments**
+- **Appointments**:
 
   - Belongs To → **Customers**
   - Belongs To → **Salons**
   - Belongs To → **Services**
   - Has One → **Transactions**
 
-- **Transactions**
+- **Transactions**:
 
   - Belongs To → **Appointments**
 
-- **Notifications**
+- **Notifications**:
 
   - Belongs To → **Admins**, **Salon Owners**, or **Customers**
 
-- **Reviews**
+- **Reviews**:
+
   - Belongs To → **Customers**
   - Belongs To → **Salons**
+
+- **User Activity Logs**:
+  - Belongs To → **Admins**, **Salon Owners**, or **Customers**
