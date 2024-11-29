@@ -14,6 +14,10 @@
   - CRUD Operations for Services
   - Service Details (Description, Duration, Price)
   - Link Services to Salons and Categories
+- **Advanced Search system**
+  - Search By location {nearesr location will server first}
+  - Search by service
+  - Apply filters for search
 - **Appointment Booking System**
   - Available Time Slots (Based on Salon Hours)
   - Appointment Booking API for Customers
